@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtual Guard Post - Prototype</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<section id="setupScreen" class="screen">
+  <div class="setup-panel">
+    <div class="setup-header">
+      <div class="setup-badge">RESEARCHER</div>
+      <h1>WIZARD OF OZ SETUP</h1>
+      <p class="setup-sub">Select scenario.</p>
+    </div>
+
+    <div class="scenario-grid">
+      <button class="scenario-btn urgency-high" onclick="selectScenario('scream')">
+        <div class="scenario-num">01</div>
+        <div class="scenario-dot red"></div>
+        <div class="scenario-info">
+          <div class="scenario-title">SCENARIO 1</div>
+        </div>
+      </button>
+
+      <button class="scenario-btn urgency-high" onclick="selectScenario('door')">
+        <div class="scenario-num">02</div>
+        <div class="scenario-dot red"></div>
+        <div class="scenario-info">
+          <div class="scenario-title">SCENARIO 2</div>
+        </div>
+      </button>
+
+      <button class="scenario-btn urgency-high" onclick="selectScenario('car')">
+        <div class="scenario-num">03</div>
+        <div class="scenario-dot red"></div>
+        <div class="scenario-info">
+          <div class="scenario-title">SCENARIO 3</div>
+        </div>
+      </button>
+
+      <button class="scenario-btn urgency-high" onclick="selectScenario('bang')">
+        <div class="scenario-num">04</div>
+        <div class="scenario-dot red"></div>
+        <div class="scenario-info">
+          <div class="scenario-title">SCENARIO 4</div>
+        </div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="idleScreen" class="screen hidden">
+  <div class="idle-desktop">
+    <div class="idle-taskbar">
+      <span class="idle-appname">Outlook</span>
+      <span class="idle-time" id="idleClock"></span>
+    </div>
+
+    <div class="idle-content">
+      <div class="idle-sidebar">
+        <div class="idle-folder active">📥 Inbox <span class="badge">3</span></div>
+        <div class="idle-folder">📤 Sent</div>
+        <div class="idle-folder">📁 Drafts</div>
+        <div class="idle-folder">🗑 Trash</div>
+      </div>
+
+      <div class="idle-emails">
+        <div class="idle-email unread">
+          <div class="email-sender">Facilities Management</div>
+          <div class="email-subject">Weekly site maintenance update - Wk 24</div>
+          <div class="email-preview">Please review the attached schedule for this week's planned...</div>
+          <div class="email-time">09:41</div>
+        </div>
+
+        <div class="idle-email unread">
+          <div class="email-sender">Planning Team</div>
+          <div class="email-subject">Tomorrow's shift handover notes</div>
+          <div class="email-preview">Hi team, attached are the notes from today's briefing...</div>
+          <div class="email-time">08:17</div>
+        </div>
+
+        <div class="idle-email">
+          <div class="email-sender">HR Department</div>
+          <div class="email-subject">Annual review schedule — please confirm slot</div>
+          <div class="email-preview">Your annual performance review has been scheduled for...</div>
+          <div class="email-time">Yesterday</div>
+        </div>
+      </div>
+
+      <div class="idle-preview">
+        <div class="email-preview-header">
+          <strong>Weekly site maintenance update</strong>
+          <span>Facilities Management · 09:41</span>
+        </div>
+
+        <div class="email-preview-body">
+          <p>Dear Team,</p>
+          <p>Please find below the planned maintenance schedule for week 24. All works will be carried out during overnight hours to minimise disruption to operations.</p>
+          <p>Key areas: North perimeter fence inspection, generator testing, and CCTV system firmware update.</p>
+          <p>Kind regards,<br>Facilities</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="vgpInterface" class="screen hidden">
+
+  <div id="alertFlash" class="alert-flash hidden"></div>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="vgp-logo">VGP</div>
+      <div class="vgp-label">VIRTUAL GUARD POST</div>
+      <div class="status-pill live">● LIVE</div>
+    </div>
+
+    <div class="topbar-center">
+     <div class="timeline-wrap">
+
+  <div class="timeline-controls">
+    <button class="tl-btn" onclick="timelinePrevious()">◀</button>
+    <button class="tl-btn" onclick="timelineNext()">▶</button>
+  </div>
+
+  <div class="timeline-title">LAST 24 HOURS</div>
+
+  <div class="timeline-track">
+    <div class="timeline-line"></div>
+    <div id="timelineEvents" class="timeline-events"></div>
+  </div>
+
+  
+
+</div>
+
+        
+    </div>
+
+   
+<div class="topbar-right">
+  <button class="now-btn" onclick="goToNow()">NOW</button>
+
+  <div class="system-time" id="systemClock"></div>
+
+  <button class="layout-settings-btn" onclick="toggleLayoutMenu()">
+    ⚙<br>LAYOUT
+  </button>
+
+  <div id="layoutMenu" class="layout-menu hidden">
+    <div class="layout-menu-title">LAYOUT PRESETS</div>
+    <button onclick="setLayout('default')">Default</button>
+    <button onclick="setLayout('mapFocus')">Map Focus</button>
+    <button onclick="setLayout('cameraFocus')">Camera Focus</button>
+    <button onclick="setLayout('logbookFocus')">Logbook Focus</button>
+    <button onclick="setLayout('mapOnly')">Map Only</button>
+  </div>
+</div>
+
+    
+  </header>
+
+  <main class="main-grid">
+
+    <aside class="left-panel">
+      <div class="panel cam-panel">
+        <div class="panel-header">
+          <span class="panel-title">CAMERA VIEW</span>
+          <span class="cam-label" id="camLabel">CAM 05 - PARKING LOT</span>
+          <span class="live-dot">● LIVE</span>
+        </div>
+
+        <div class="cam-viewport" id="camViewport">
+<video id="cameraVideo" muted></video>
+          <div class="cam-no-source" id="camNoSource">
+            <div class="cam-placeholder">
+              <div class="cam-icon">📹</div>
+              <div>Camera feed unavailable</div>
+            </div>
+          </div>
+
+          <div class="cam-overlay-info">
+            <span id="camOverlayTime"></span>
+          </div>
+        </div>
+
+        <div class="cam-controls">
+          <button class="cam-ctrl-btn" onclick="toggleVideoPlay()" id="playPauseBtn">▶ PLAY</button>
+          <div class="cam-timeline-bar">
+            <input type="range" id="videoSeek" min="0" max="100" value="0" oninput="seekVideo(this.value)">
+          </div>
+          <span class="cam-time-disp" id="videoTimeDisp">0:00 / 0:00</span>
+          <button class="cam-ctrl-btn" onclick="toggleCameraSize()">⛶ EXPAND</button>
+        </div>
+      </div>
+
+      <div class="panel audio-panel">
+        <div class="panel-header">
+          <span class="panel-title">AUDIO - SPATIAL & EVENT SOUND</span>
+        </div>
+
+        <div class="audio-row live-audio-row">
+          <div class="audio-row-label">🎧 LIVE AUDIO</div>
+          <div class="live-indicator">● LIVE</div>
+          <div class="audio-meter">
+            <div class="meter-bar" id="meterBar"></div>
+          </div>
+          <button class="audio-icon-btn">🔊</button>
+        </div>
+
+        <div class="audio-row event-sound-row">
+          <div class="audio-row-label">EVENT SOUND</div>
+          <button class="audio-play-btn" onclick="toggleEventSound(this)">▶</button>
+          <div class="waveform">
+            <canvas id="waveCanvas" width="200" height="48"></canvas>
+          </div>
+          <button class="audio-icon-btn">🔊</button>
+          <audio id="eventAudio"></audio>
+<audio id="videoAudio"></audio>
+          
+        </div>
+
+        <div class="audio-timestamp" id="audioTimestamp">00:00 - 00:06</div>
+        <div class="audio-hint">Use headphones to hear the detected sound</div>
+      </div>
+    </aside>
+
+    <section class="center-panel">
+      <div class="panel map-panel-wrap">
+
+        <div class="map-header">
+          <span class="panel-title">MAP - EVENT LOCATION & CAMERAS</span>
+        </div>
+
+        <div class="map-layout">
+          <div class="map-sidebar-tools">
+            <button class="map-tool active" onclick="showPlainMap()">🗺️<span>MAP</span></button>
+<button class="map-tool" onclick="showSatelliteMap()">🛰️<span>SAT</span></button>
+<button class="map-tool" onclick="toggleCameraList()">📷<span>CAMERAS</span></button>
+<div class="map-tool-divider"></div>
+<button class="map-tool" onclick="zoomMap(0.15)">+</button>
+<button class="map-tool" onclick="zoomMap(-0.15)">−</button>
+          </div>
+
+         <div class="map-area" id="mapArea">
+
+  <div id="mapZoomLayer" class="map-zoom-layer">
+    <img src="map.png" class="custom-map active-map" id="plainMap">
+    <img src="satelite.png" class="custom-map hidden-map" id="satelliteMap">
+
+
+    <button id="camIcon01" class="map-cam-icon" style="left:22%;top:17%" onclick="switchCamera('CAM 01 - Main Gate', 'camIcon01')">📷</button>
+    <button id="camIcon02" class="map-cam-icon" style="left:65%;top:12%" onclick="switchCamera('CAM 02 - North Perimeter', 'camIcon02')">📷</button>
+    <button id="camIcon03" class="map-cam-icon" style="left:46%;top:36%" onclick="switchCamera('CAM 03 - Central', 'camIcon03')">📷</button>
+    <button id="camIcon04" class="map-cam-icon" style="left:15%;top:58%" onclick="switchCamera('CAM 04 - West Entrance', 'camIcon04')">📷</button>
+    <button id="camIcon05" class="map-cam-icon" style="left:58%;top:58%" onclick="switchCamera('CAM 05 - Parking Lot', 'camIcon05')">📷</button>
+    <button id="camIcon06" class="map-cam-icon" style="left:35%;top:75%" onclick="switchCamera('CAM 06 - South Area', 'camIcon06')">📷</button>
+
+    <svg class="doa-overlay" id="doaOverlay" viewBox="0 0 180 180">
+      <polygon id="doaCone" points="90,90 170,65 170,115"
+        fill="rgba(230,57,70,0.35)"
+        stroke="#e63946"
+        stroke-width="3" />
+    </svg>
+
+    <div class="event-marker" id="eventMarker">
+      <div class="event-pulse"></div>
+      <div class="event-dot"></div>
+    </div>
+  </div>
+
+  <div id="cameraListPanel" class="camera-list-panel hidden">
+  <div class="camera-list-header">
+    <span>CAMERAS</span>
+    <button onclick="toggleCameraList()">×</button>
+  </div>
+
+  <button onclick="switchCamera('CAM 01 - Main Gate', 'camIcon01')">📷 CAM 01 - Main Gate</button>
+  <button onclick="switchCamera('CAM 02 - North Perimeter', 'camIcon02')">📷 CAM 02 - North Perimeter</button>
+  <button onclick="switchCamera('CAM 03 - Central Area', 'camIcon03')">📷 CAM 03 - Central Area</button>
+  <button onclick="switchCamera('CAM 04 - West Entrance', 'camIcon04')">📷 CAM 04 - West Entrance</button>
+  <button onclick="switchCamera('CAM 05 - Parking Lot', 'camIcon05')">📷 CAM 05 - Parking Lot</button>
+  <button onclick="switchCamera('CAM 06 - South Area', 'camIcon06')">📷 CAM 06 - South Area</button>
+</div>
+
+</div>
+        </div>
+
+        <div class="decision-logbook-row combined-bottom-row">
+          <div class="decision-section">
+            <div class="decision-header">OPERATOR DECISION </div>
+            <div class="decision-sub">Does this event require action?</div>
+
+            <div class="decision-buttons">
+              <button class="decision-btn action-btn" onclick="makeDecision('Take Action')">
+                <span class="decision-icon">⚠</span>
+                <span class="decision-label">TAKE ACTION</span>
+                <span class="decision-desc">Requires immediate attention</span>
+              </button>
+
+              <button class="decision-btn monitor-btn" onclick="makeDecision('Monitor')">
+                <span class="decision-icon">👁</span>
+                <span class="decision-label">MONITOR</span>
+                <span class="decision-desc">Keep under observation</span>
+              </button>
+
+              <button class="decision-btn dismiss-btn" onclick="makeDecision('Dismiss')">
+                <span class="decision-icon">✓</span>
+                <span class="decision-label">DISMISS</span>
+                <span class="decision-desc">Not relevant / False alarm</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bottom-event-info">
+            <div class="decision-header">EVENT INFORMATION</div>
+
+            <div class="bottom-event-grid">
+              <div><span class="ei-label">TYPE</span><span class="ei-value accent" id="eventType">—</span></div>
+              <div><span class="ei-label">CONFIDENCE</span><span class="ei-value accent" id="confidence">—</span></div>
+              <div><span class="ei-label">TIME</span><span class="ei-value" id="timestamp">—</span></div>
+              <div><span class="ei-label">DATE</span><span class="ei-value" id="eventDate">—</span></div>
+              <div><span class="ei-label">DIRECTION</span><span class="ei-value" id="directionVal">—</span></div>
+              <div><span class="ei-label">DISTANCE</span><span class="ei-value" id="distanceVal">—</span></div>
+            </div>
+
+            <div class="event-description bottom-description" id="eventDescription">—</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="right-panel">
+      <div class="panel logbook-panel">
+        <div class="panel-header">
+          <span class="panel-title">LOGBOOK - EVENT HISTORY</span>
+        </div>
+        <ul id="logbookList" class="logbook-list"></ul>
+        <button class="view-all-lb" onclick="openLogbookView()">VIEW ALL EVENTS →</button>
+      </div>
+
+      <div class="panel quick-logbook-panel">
+        <div class="panel-header">
+          <span class="panel-title">LOGBOOK NOTE</span>
+        </div>
+
+        <div class="quick-logbook-section right-quick-logbook">
+
+  <div class="decision-sub">Add quick note...</div>
+
+  <textarea
+    class="quick-note-input"
+    id="quickNoteInput"
+    placeholder="Quick note..."
+  ></textarea>
+  <input
+  type="text"
+  class="quick-camera-input"
+  id="quickCameraInput"
+  placeholder="Select or type camera... (optional)"
+  list="cameraSuggestions"
+/>
+<select id="quickAssignSelect" class="quick-camera-input">
+  <option value="">Standalone note</option>
+</select>
+
+<datalist id="cameraSuggestions">
+  <option value="CAM 01 - Main Gate">
+  <option value="CAM 02 - North Perimeter">
+  <option value="CAM 03 - Central">
+  <option value="CAM 04 - West Entrance">
+  <option value="CAM 05 - Parking Lot">
+  <option value="CAM 06 - South Area">
+</datalist>
+
+  <button class="add-event-btn" onclick="saveQuickNote()">
+    ＋ ADD EVENT
+  </button>
+
+  <button class="view-all-btn" onclick="openLogbookView()">
+    VIEW ALL EVENTS →
+  </button>
+
+</div>
+      </div>
+    </aside>
+
+  </main>
+</section>
+
+<div id="logbookModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">LOGBOOK</div>
+        <div class="modal-sub">NEW EVENT RECORD</div>
+      </div>
+      <button class="modal-cancel" onclick="cancelLogbook()">✕ CANCEL</button>
+    </div>
+
+    <div class="modal-sections">
+      <div class="modal-section">
+        <div class="section-num">①</div>
+        <div class="section-content">
+          <div class="section-label">AUDIO</div>
+          <div class="modal-audio-row">
+            <button class="modal-play-btn" onclick="toggleEventSound(this)">▶</button>
+            <canvas id="modalWaveCanvas" width="420" height="48" class="modal-waveform"></canvas>
+            <span class="modal-audio-time" id="modalAudioTime">00:23</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="section-num">②</div>
+        <div class="section-content">
+          <div class="section-label">TIMESTAMP</div>
+          <div class="modal-timestamp-row">
+            <span class="ts-icon">📅</span>
+            <input type="text" class="ts-input" id="modalDate" readonly>
+            <span class="ts-icon">🕐</span>
+<div class="time-stepper">
+  <button type="button" class="time-step-btn" onclick="adjustModalTime(-1)">−</button>
+
+  <div class="time-display" id="modalTimestamp">23:14</div>
+
+  <button type="button" class="time-step-btn" onclick="adjustModalTime(1)">+</button>
+</div>          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="section-num">③</div>
+        <div class="section-content">
+          <div class="section-label">DOA (DIRECTION OF ARRIVAL)</div>
+          <div class="modal-doa-row">
+            <canvas id="compassCanvas" width="120" height="120" class="compass-canvas"></canvas>
+            <div class="azimuth-block">
+              <div class="az-label">AZIMUTH</div>
+              <div class="az-value" id="modalAzimuth">045°</div>
+              <div class="az-dir" id="modalDoa">(NE)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="section-num">④</div>
+        <div class="section-content">
+          <div class="section-label">OPERATOR LABEL</div>
+          <div class="label-input-wrap">
+            <input
+  type="text"
+  id="operatorLabel"
+  class="label-input"
+  placeholder="Enter event label..."
+  list="labelSuggestions"
+>
+
+<datalist id="labelSuggestions">
+  <option value="SCREAM">
+  <option value="CAR HORN">
+  <option value="DOOR SLAM">
+  <option value="FOOTSTEPS">
+  <option value="GLASS BREAK">
+  <option value="VEHICLE">
+  <option value="ALARM">
+</datalist>
+
+<div class="label-hint">Choose a suggestion or write your own label.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="modal-reset-btn" onclick="resetLogbookForm()">RESET</button>
+      <div class="modal-decision-disp">Decision: <strong id="modalDecision">—</strong></div>
+      <button class="modal-save-btn" onclick="saveEvent()">SAVE RECORD</button>
+    </div>
+  </div>
+</div>
+
+<div id="logbookView" class="modal-overlay hidden">
+  <div class="logbook-full-box">
+    <div class="lb-full-header">
+      <div>
+        <div class="modal-title">LOGBOOK</div>
+        <div class="modal-sub">EVENT RECORDS</div>
+      </div>
+      <div class="lb-header-right">
+<input
+  id="logbookSearchInput"
+  class="lb-search-input"
+  type="text"
+  placeholder="Search logbook..."
+  oninput="renderFullLogbook()"
+/>
+
+<select id="logbookFilterSelect" class="lb-filter-select" onchange="renderFullLogbook()">
+  <option value="all">All</option>
+  <option value="Take Action">Take Action</option>
+  <option value="Monitor">Monitor</option>
+  <option value="Dismiss">Dismiss</option>
+  <option value="NOTE">Notes</option>
+</select>        <button class="modal-cancel" onclick="closeLogbookView()">✕ CLOSE</button>
+      </div>
+    </div>
+
+  <div class="lb-table-header">
+  <span>TIME</span>
+  <span>AUDIO</span>
+  <span>DOA</span>
+  <span>CAMERA</span>
+  <span>OPERATOR LABEL</span>
+</div>
+
+    <div id="logbookFullList" class="lb-full-list"></div>
+
+    <div class="lb-pagination">
+      <button class="lb-page-btn" onclick="logbookPreviousPage()">❮</button>
+<span id="lbPageInfo">DAY 1 OF 1</span>
+<button class="lb-page-btn" onclick="logbookNextPage()">❯</button>
+    </div>
+  </div>
+</div>
+
+<div id="videoExpanded" class="video-expanded-overlay hidden" onclick="toggleCameraSize()">
+  <video id="cameraVideoLarge" controls loop></video>
+  <div class="expand-hint">Click anywhere to close</div>
+</div>
+
+<div id="entryNoteModal" class="modal-overlay hidden">
+  <div class="entry-note-box">
+    <div class="entry-note-header">
+      <div>
+        <div class="modal-title">EVENT NOTE</div>
+        <div class="modal-sub">PRIVATE OPERATOR NOTE</div>
+      </div>
+      <button class="modal-cancel" onclick="closeEntryNoteModal()">✕ CLOSE</button>
+    </div>
+
+    <textarea
+      id="entryNoteInput"
+      class="entry-note-input"
+      placeholder="Write note for this event..."
+    ></textarea>
+
+    <div class="entry-note-footer">
+      <button class="modal-reset-btn" onclick="deleteEntryNote()">DELETE NOTE</button>
+      <button class="modal-save-btn" onclick="saveEntryNote()">SAVE NOTE</button>
+    </div>
+  </div>
+</div>
+
+<div id="eventNotification" class="event-notification hidden">
+  <div class="notif-top">
+    <span class="notif-live">● EVENT DETECTED</span>
+    <span class="notif-time" id="notifTime">23:14</span>
+  </div>
+
+  <div class="notif-title" id="notifTitle">
+    SCREAM DETECTED
+  </div>
+
+  <div class="notif-meta" id="notifMeta">
+    87% confidence · CAM 05
+  </div>
+
+  <button class="notif-open-btn" onclick="openNotificationEvent()">
+    OPEN EVENT
+  </button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
